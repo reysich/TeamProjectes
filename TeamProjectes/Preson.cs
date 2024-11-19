@@ -1,4 +1,4 @@
-﻿namespace PR1;
+﻿namespace TeamProjectes;
 
 class Person
 {

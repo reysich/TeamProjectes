@@ -8,5 +8,6 @@ namespace TeamProjectes
 {
     internal class Paper
     {
+
     }
 }

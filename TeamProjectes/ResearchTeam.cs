@@ -41,12 +41,12 @@ namespace TeamProjectes
         }
         public string NameOrganiz
         {
-            set { NameOrganiz = value; }
+            set { nameOrganiz = value; }
             get { return nameOrganiz; }
         }
         public int RegNum
         {
-            set { RegNum = value; }
+            set { regNum = value; }
             get { return regNum; }
         }
         public TimeFarme Timeframe
@@ -64,28 +64,26 @@ namespace TeamProjectes
         {
             get
             {
-                Paper lat = listPublicat[0];
                 if (listPublicat.Length == 0)
                 {
                     return null;
                 }
-                else
+
+                Paper latest = listPublicat[0];
+                DateTime maxDate = listPublicat[0].PublishDate;
+
+                for (int i = 1; i < listPublicat.Length; i++)
                 {
-                    Paper t = listPublicat[0];
-                    DateTime max = listPublicat[0].PublishDate;
-                    for(int i = 0; i < listPublicat.Length; i++)
+                    if (listPublicat[i].PublishDate > maxDate)
                     {
-                        if (listPublicat[i].PublishDate.Year> max.Year)
-                        {
-                            max = listPublicat[i].PublishDate;
-                            t = listPublicat[i];
-                        }
+                        maxDate = listPublicat[i].PublishDate;
+                        latest = listPublicat[i];
                     }
-                    return t;
                 }
-                
+                return latest;
             }
         }
+
         public bool this[TimeFarme t]
         {
             get 

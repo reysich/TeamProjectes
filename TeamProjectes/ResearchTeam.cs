@@ -13,15 +13,19 @@ namespace TeamProjectes
         Long
 
     }
-    internal class ResearchTeam
+    internal class ResearchTeam : Team
     {
+        
+
         private string nameisled;
         private string nameOrganiz;
         private int regNum;
         private TimeFarme timeframe;
         private Paper[] listPublicat;
+        private System.Collections.ArrayList listPerson;
+        private System.Collections.ArrayList listPaper;
       
-        public ResearchTeam(string nameisled, string nameOrganiz, int regNum, TimeFarme timeFarme, Paper[] listPublicat)
+        public ResearchTeam(string nameisled, string nameOrganiz, int regNum, TimeFarme timeFarme, Paper[] listPublicat)  : base(nameOrganiz, regNum)
         {
             this.nameisled = nameisled;
             this.nameOrganiz = nameOrganiz;
@@ -30,7 +34,7 @@ namespace TeamProjectes
             this.listPublicat = listPublicat;
             
         }
-        public ResearchTeam()
+        public ResearchTeam() : base()
         {
             this.listPublicat = new Paper[0];
         }
@@ -109,7 +113,7 @@ namespace TeamProjectes
         }
         public override string ToString()
         {
-            string rez = $"Название темы иследования:{nameisled}\nНазвание организации:{nameOrganiz}\nРегстрационный номер:{regNum}\nПродолжительность иследований:{timeframe}\nСписок публикаций:\n" ;
+            string rez = base.ToString() + $"Название темы иследования:{nameisled}\nНазвание организации:{nameOrganiz}\nРегстрационный номер:{regNum}\nПродолжительность иследований:{timeframe}\nСписок публикаций:\n" ;
             for(int i = 0; i <  listPublicat.Length; i++)
             {
                 rez += listPublicat[i] + "\n";

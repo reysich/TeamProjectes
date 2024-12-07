@@ -8,6 +8,11 @@ class Paper
     public Person Author { get; set; }
     public DateTime PublishDate { get; set; }
 
+    public virtual object DeepCopy()
+    {
+        return new Paper(Title, (Person)Author.DeepCopy(), PublishDate);
+    }
+
     public Paper(string title, Person author, DateTime publishDate) 
     {
         Title = title; 

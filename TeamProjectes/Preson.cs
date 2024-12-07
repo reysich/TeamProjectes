@@ -1,4 +1,6 @@
-﻿namespace TeamProjectes;
+﻿using System.Xml.Linq;
+
+namespace TeamProjectes;
 
 class Person
 {
@@ -54,6 +56,10 @@ class Person
         }
     }
 
+    public virtual object DeepCopy()
+    {
+        return new Person(firstName, lastName, birthday);
+    }
     public Person()
     {
         this.firstName = "Имя неизвестно";

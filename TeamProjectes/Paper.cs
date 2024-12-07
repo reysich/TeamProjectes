@@ -30,4 +30,9 @@ class Paper
     { 
         return $"Заголовок: {Title}, Автор: {Author.ToString()}, Дата публикации: {PublishDate.ToShortDateString()}"; 
     }
+    public string Name 
+    {
+        get => Title; 
+        set => Title = value;
+    }
 }

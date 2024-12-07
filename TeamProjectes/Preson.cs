@@ -56,10 +56,7 @@ class Person
         }
     }
 
-    public virtual object DeepCopy()
-    {
-        return new Person(firstName, lastName, birthday);
-    }
+
     public Person()
     {
         this.firstName = "Имя неизвестно";
@@ -74,7 +71,24 @@ class Person
         Birthday = birthday;
     }
 
+    public virtual object DeepCopy()
+    {
+        return new Person(firstName, lastName, birthday);
+    }
     public override string ToString() => $"Имя: {firstName}; Фамилия: {LastName}; год рождения: {birthday.ToShortDateString()}";
 
     public virtual string ToShortString() => $"Имя: {firstName}; Фамилия: {LastName}";
+
+    public override bool Equals(object? obj)
+    {
+        if (obj == null || GetType() != obj.GetType()) return false;
+        Person oth = (Person)obj;
+        return firstName == oth.firstName && lastName == oth.lastName && birthday == oth.birthday;
+    }
+
+    public override int GetHashCode() 
+    {
+        return HashCode.Combine(firstName, lastName, birthday);
+    }
+
 }

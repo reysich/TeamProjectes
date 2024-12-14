@@ -1,11 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TeamProjectes
 {
+    public interface IEnumerator<ResearchTeam>////////////
+    {
+        bool MoveNext();
+        ResearchTeam Current { get; }
+        void Reset();
+    }
+    internal class ListResearchTeam : IEnumerator<ResearchTeam>///////////////
+    {
+        private List<ResearchTeam> List;
+        public bool disposed = false;
+        public int currentIndex = -1;
+        public ListResearchTeam(List<ResearchTeam> tr) => this.List = tr;
+        public ResearchTeam Current
+        {
+            get { return List[currentIndex]; }
+        }
+        public bool MoveNext()
+        {
+            if (currentIndex + 1 == List.Count)
+            {
+                Reset();
+                return false;
+            }
+            currentIndex++;
+            return true;
+        }
+        public void Reset()
+        {
+            currentIndex = -1;
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+
+                }
+                this.disposed = true;
+            }
+        }
+    }
+    public class ResearchEnum : IEnumerable<ResearchTeam>/////////////////////
+    {
+        List<ResearchTeam> list;
+        public IEnumerator<ResearchTeam> GetEnumerator() => new ListResearchTeam(list);
+        public ResearchEnum(List<ResearchTeam> list)
+        {
+            this.list = list;
+        }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+        System.Collections.Generic.IEnumerator<ResearchTeam> IEnumerable<ResearchTeam>.GetEnumerator()
+        { throw new NotImplementedException(); }
+    }
+
     public enum TimeFarme
     {
         Year,
@@ -13,75 +77,77 @@ namespace TeamProjectes
         Long
 
     }
-    internal class ResearchTeam : Team
+    internal class ResearchTeam : Team , INameAndCopy
     {
         
-
         private string nameisled;
-        private string nameOrganiz;
-        private int regNum;
         private TimeFarme timeframe;
-        private Paper[] listPublicat;
         private System.Collections.ArrayList listPerson;
         private System.Collections.ArrayList listPaper;
       
-        public ResearchTeam(string nameisled, string nameOrganiz, int regNum, TimeFarme timeFarme, Paper[] listPublicat)  : base(nameOrganiz, regNum)
+        public ResearchTeam(string nameisled, string nameOrganiz, int regNum, TimeFarme timeFarme)  : base(nameOrganiz, regNum)
         {
             this.nameisled = nameisled;
-            this.nameOrganiz = nameOrganiz;
-            this.regNum = regNum;
             this.timeframe = timeFarme;
-            this.listPublicat = listPublicat;
+            /////////////////////////////////////////////////// 
             
         }
         public ResearchTeam() : base()
         {
-            this.listPublicat = new Paper[0];
+            /////////////////////////////////
+            this.nameisled = "default";
         }
-        public string Nameisled
+        public string Name
         {
             set { nameisled = value; }
             get { return nameisled; }
-        }
-        public string NameOrganiz
-        {
-            set { nameOrganiz = value; }
-            get { return nameOrganiz; }
-        }
-        public int RegNum
-        {
-            set { regNum = value; }
-            get { return regNum; }
         }
         public TimeFarme Timeframe
         {
             set { timeframe = value; }
             get { return timeframe; }
         }
-        public Paper[] ListPublicat
+      
+        public System.Collections.ArrayList ListPerson
         {
-            set { listPublicat = value; }
-            get { return listPublicat; }
+            set { listPerson = value; }
+            get { return listPerson; }
         }
-
+        public System.Collections.ArrayList ListPaper
+        {
+            set { listPaper = value; }
+            get { return listPaper; }
+        }
+        public Team BaseTeam 
+        {
+            get
+            {
+                return new Team(Name, RegistrId);
+            }
+            set 
+            { 
+                Name = value.Name;
+                RegistrId = value.RegistrId; 
+            } 
+        }
         public Paper lastPublicat
         {
             get
             {
-                if (listPublicat.Length == 0)
+                if (listPaper.Count == 0)
                 {
                     return null;
                 }
 
-                Paper latest = listPublicat[0];
-                DateTime maxDate = listPublicat[0].PublishDate;
+                Paper latest = (Paper)listPaper[0];
+                DateTime maxDate = latest.PublishDate;
 
-                for (int i = 1; i < listPublicat.Length; i++)
+                foreach(Paper paper in listPaper)
                 {
-                    if (listPublicat[i].PublishDate > maxDate)
+                    if (paper.PublishDate > maxDate)
                     {
-                        maxDate = listPublicat[i].PublishDate;
-                        latest = listPublicat[i];
+                        maxDate = paper.PublishDate;
+                        latest = paper;
                     }
                 }
                 return latest;
@@ -102,27 +168,37 @@ namespace TeamProjectes
                 }
             }
         }
-        public void AddPapers(params Paper[] m)
+        public void AddPapers(params Paper[] publicat)
         {
-            int oldLength = listPublicat.Length;
-            Array.Resize(ref listPublicat, oldLength + m.Length);
-            for (int i = 0; i < m.Length; i++)
-            {
-                listPublicat[oldLength + i] = m[i];
-            }
+            listPaper.Add(publicat);
+        }
+        public void AddMembers(params Person[] persons)
+        {
+            listPerson.Add(persons);
         }
         public override string ToString()
         {
-            string rez = base.ToString() + $"Название темы иследования:{nameisled}\nНазвание организации:{nameOrganiz}\nРегстрационный номер:{regNum}\nПродолжительность иследований:{timeframe}\nСписок публикаций:\n" ;
-            for(int i = 0; i <  listPublicat.Length; i++)
+            string rez = base.ToString() + $"Название темы иследования:{nameisled}\nНазвание организации:{nameOrganiz}\nРегстрационный номер:{registrId}\nПродолжительность иследований:{timeframe}\nСписок публикаций:\nСписок участников:\n" ;
+            foreach (Paper paper in listPaper)
             {
-                rez += listPublicat[i] + "\n";
+                rez += paper + "\n";
+            }
+            rez += "Список публикаций\n";
+            foreach (Paper paper in listPerson)
+            {
+                rez += paper + "\n";
             }
             return rez;
         }
         public virtual string ToShotrString()
         {
-            return $"Название темы иследования:{nameisled}\nНазвание организации:{nameOrganiz}\nРегстрационный номер:{regNum}\nПродолжительность иследований:{timeframe}\n";
+            return $"Название темы иследования:{nameisled}\nНазвание организации:{nameOrganiz}\nРегстрационный номер:{registrId}\nПродолжительность иследований:{timeframe}\n";
         }
+        public override  object DeepCopy()
+        {
+            return new ResearchTeam(nameisled, Name, RegistrId, timeframe);
+        }
+
+
     }
 }

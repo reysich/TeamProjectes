@@ -13,7 +13,7 @@ namespace TeamProjectes
         ResearchTeam Current { get; }
         void Reset();
     }
-    internal class ListResearchTeam : IEnumerator<ResearchTeam>///////////////
+    internal class ListResearchTeam : IEnumerator<ResearchTeam>////////////////
     {
         private List<ResearchTeam> List;
         public bool disposed = false;
@@ -54,7 +54,7 @@ namespace TeamProjectes
             }
         }
     }
-    public class ResearchEnum : IEnumerable<ResearchTeam>/////////////////////
+    public class ResearchEnum : IEnumerable<ResearchTeam>//////////////////////
     {
         List<ResearchTeam> list;
         public IEnumerator<ResearchTeam> GetEnumerator() => new ListResearchTeam(list);

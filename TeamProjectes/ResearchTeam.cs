@@ -3,13 +3,6 @@ using System.Collections;
 
 namespace TeamProjectes
 {
-    public enum TimeFarme
-    {
-        Year,
-        TwoYears,
-        Long
-    }
-
     internal class ResearchTeam : Team, INameAndCopy
     {
         private string nameisled;
@@ -129,15 +122,6 @@ namespace TeamProjectes
         public virtual string ToShotrString()
         {
             return base.ToString() + $"Название темы исследования:{nameisled}\nПродолжительность исследований:{timeframe}\n";
-        }
-
-        public override object DeepCopy()
-        {
-            return new ResearchTeam(nameisled, Name, RegistrId, timeframe)
-            {
-                ListPerson = (ArrayList)listPerson.Clone(),
-                ListPaper = (ArrayList)listPaper.Clone(),
-            };
         }
 
         public IEnumerable PersonPerebor()

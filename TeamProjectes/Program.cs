@@ -60,23 +60,5 @@ class Program
         {
             Console.WriteLine(paper);
         }
-
-        Console.WriteLine("Участники проекта с публикациями:");
-        foreach (Person person in researchTeam)
-        {
-            Console.WriteLine(person);
-        }
-
-        Console.WriteLine("Участники проекта с более чем одной публикацией:");
-        foreach (Person person in researchTeam.PersonsWithMultiplePapers())
-        {
-            Console.WriteLine(person);
-        }
-
-        Console.WriteLine("Публикации за последний год:");
-        foreach (Paper paper in researchTeam.PapersFromLastYear())
-        {
-            Console.WriteLine(paper);
-        }
     }
 }

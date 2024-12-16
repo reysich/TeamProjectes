@@ -1,29 +1,22 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TeamProjectes
 {
-    // чибоксар
     public enum TimeFarme
     {
         Year,
         TwoYears,
         Long
     }
+
     internal class ResearchTeam : Team, INameAndCopy
     {
-        // поля класса
-        private string nameisled; 
-        private TimeFarme timeframe; 
+        private string nameisled;
+        private TimeFarme timeframe;
         private ArrayList listPerson;
-        private ArrayList listPaper; 
+        private ArrayList listPaper;
 
-        // онструктор лего
         public ResearchTeam(string nameisled, string nameOrganiz, int regNum, TimeFarme timeFarme) : base(nameOrganiz, regNum)
         {
             this.nameisled = nameisled;
@@ -31,6 +24,7 @@ namespace TeamProjectes
             this.listPerson = new ArrayList();
             this.listPaper = new ArrayList();
         }
+
         public ResearchTeam() : base()
         {
             this.listPerson = new ArrayList();
@@ -38,7 +32,6 @@ namespace TeamProjectes
             this.nameisled = "default";
         }
 
-        //свойства
         public string Name
         {
             set { nameisled = value; }
@@ -62,19 +55,18 @@ namespace TeamProjectes
             set { listPaper = value; }
             get { return listPaper; }
         }
+
         public Team BaseTeam
         {
-            get
-            {
-                return new Team(Name, RegistrId);
-            }
+            get { return new Team(Name, RegistrId); }
             set
             {
                 Name = value.Name;
                 RegistrId = value.RegistrId;
             }
         }
-        public Paper LastPublication
+
+        public Paper lastPublicat
         {
             get
             {
@@ -98,14 +90,21 @@ namespace TeamProjectes
             }
         }
 
-        // продолжительность исследованрей крч да
         public bool this[TimeFarme t]
         {
             get
             {
-                return timeframe == t;
+                if (timeframe == t)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
+
         public void AddPapers(params Paper[] publicat)
         {
             foreach (Paper pub in publicat)
@@ -121,32 +120,58 @@ namespace TeamProjectes
                 listPerson.Add(person);
             }
         }
+
         public override string ToString()
         {
-            return base.ToString() +
-                   $"Название темы исследования: {nameisled}\n" +
-                   $"Продолжительность исследований: {timeframe}\n" +
-                   $"Список публикаций: {string.Join("\n", listPaper)}\n" +
-                   $"Список участников: {string.Join("\n", listPerson)}";
+            return base.ToString() + $"Название темы исследования:{nameisled}\nПродолжительность исследований:{timeframe}\nСписок публикаций:\n" + string.Join("\n", listPaper) + " \nСписок участников:\n" + string.Join("\n", listPerson);
         }
 
-        public virtual string ToShortString()
+        public virtual string ToShotrString()
         {
-            return base.ToString() +
-                   $"Название темы исследования: {nameisled}\n" +
-                   $"Продолжительность исследований: {timeframe}\n";
+            return base.ToString() + $"Название темы исследования:{nameisled}\nПродолжительность исследований:{timeframe}\n";
         }
 
-        // глубоко копи коип
         public override object DeepCopy()
         {
-            ResearchTeam copy = (ResearchTeam)this.MemberwiseClone();
-            copy.ListPerson = (ArrayList)listPerson.Clone();
-            copy.ListPaper = (ArrayList)listPaper.Clone();
-            return copy;
+            return new ResearchTeam(nameisled, Name, RegistrId, timeframe)
+            {
+                ListPerson = (ArrayList)listPerson.Clone(),
+                ListPaper = (ArrayList)listPaper.Clone(),
+            };
         }
 
-        // сравненрие
+        public IEnumerable PersonPerebor()
+        {
+            foreach (Person person in listPerson)
+            {
+                bool publicat = true;
+                foreach (Paper paper in listPaper)
+                {
+                    if (paper.Author.Equals(person))
+                    {
+                        publicat = false;
+                        break;
+                    }
+                }
+                if (!publicat)
+                {
+                    yield return person;
+                }
+            }
+        }
+
+        public IEnumerable Paperperebor(int n)
+        {
+            DateTime Date = DateTime.Now;
+            foreach (Paper paper in listPaper)
+            {
+                if ((Date - paper.PublishDate).TotalDays <= n * 365)
+                {
+                    yield return paper;
+                }
+            }
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null || GetType() != obj.GetType()) return false;
@@ -154,11 +179,11 @@ namespace TeamProjectes
             return base.Equals(other) && nameisled == other.nameisled && timeframe == other.timeframe;
         }
 
-        // хэшик кешик
         public override int GetHashCode()
         {
             return HashCode.Combine(base.GetHashCode(), nameisled, timeframe);
         }
+
         public static bool operator ==(ResearchTeam rt1, ResearchTeam rt2)
         {
             if (ReferenceEquals(rt1, null) && ReferenceEquals(rt2, null)) return true;
@@ -171,41 +196,6 @@ namespace TeamProjectes
             return !(rt1 == rt2);
         }
 
-        // метод для пперебора чепухов
-        public IEnumerable<Person> PersonPerebor()
-        {
-            foreach (Person person in listPerson)
-            {
-                bool hasPublication = false;
-                foreach (Paper paper in listPaper)
-                {
-                    if (paper.Author.Equals(person))
-                    {
-                        hasPublication = true;
-                        break;
-                    }
-                }
-                if (!hasPublication)
-                {
-                    yield return person;
-                }
-            }
-        }
-
-        // за ласт лет йоу
-        public IEnumerable<Paper> Paperperebor(int n)
-        {
-            DateTime currentDate = DateTime.Now;
-            foreach (Paper paper in listPaper)
-            {
-                if ((currentDate - paper.PublishDate).TotalDays <= n * 365)
-                {
-                    yield return paper;
-                }
-            }
-        }
-
-        // перебор крутых
         public IEnumerator GetEnumerator()
         {
             foreach (Person person in listPerson)
@@ -221,7 +211,6 @@ namespace TeamProjectes
             }
         }
 
-        // перебор больше 1 публикации на онлике
         public IEnumerable<Person> PersonsWithMultiplePapers()
         {
             foreach (Person person in listPerson)
@@ -241,7 +230,6 @@ namespace TeamProjectes
             }
         }
 
-        // публикации за ласт год
         public IEnumerable<Paper> PapersFromLastYear()
         {
             DateTime currentDate = DateTime.Now;

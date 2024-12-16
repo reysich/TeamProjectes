@@ -85,7 +85,16 @@ class Person
         Person oth = (Person)obj;
         return firstName == oth.firstName && lastName == oth.lastName && birthday == oth.birthday;
     }
-
+    public static bool operator ==(Person lhs, Person rhs) 
+    { 
+        if (ReferenceEquals(lhs, null) && ReferenceEquals(rhs, null)) return true;
+        if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null)) return false; 
+        return lhs.Equals(rhs); 
+    }
+    public static bool operator !=(Person lhs, Person rhs)
+    {
+        return !(lhs == rhs); 
+    }
     public override int GetHashCode() 
     {
         return HashCode.Combine(firstName, lastName, birthday);

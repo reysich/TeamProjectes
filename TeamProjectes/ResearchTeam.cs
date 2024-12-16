@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.AccessControl;
@@ -7,69 +8,6 @@ using System.Threading.Tasks;
 
 namespace TeamProjectes
 {
-    public interface IEnumerator<ResearchTeam>////////////
-    {
-        bool MoveNext();
-        ResearchTeam Current { get; }
-        void Reset();
-    }
-    internal class ListResearchTeam : IEnumerator<ResearchTeam>////////////////
-    {
-        private List<ResearchTeam> List;
-        public bool disposed = false;
-        public int currentIndex = -1;
-        public ListResearchTeam(List<ResearchTeam> tr) => this.List = tr;
-        public ResearchTeam Current
-        {
-            get { return List[currentIndex]; }
-        }
-        public bool MoveNext()
-        {
-            if (currentIndex + 1 == List.Count)
-            {
-                Reset();
-                return false;
-            }
-            currentIndex++;
-            return true;
-        }
-        public void Reset()
-        {
-            currentIndex = -1;
-        }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-
-                }
-                this.disposed = true;
-            }
-        }
-    }
-    public class ResearchEnum : IEnumerable<ResearchTeam>//////////////////////
-    {
-        List<ResearchTeam> list;
-        public IEnumerator<ResearchTeam> GetEnumerator() => new ListResearchTeam(list);
-        public ResearchEnum(List<ResearchTeam> list)
-        {
-            this.list = list;
-        }
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-        System.Collections.Generic.IEnumerator<ResearchTeam> IEnumerable<ResearchTeam>.GetEnumerator()
-        { throw new NotImplementedException(); }
-    }
-
     public enum TimeFarme
     {
         Year,
@@ -89,12 +27,14 @@ namespace TeamProjectes
         {
             this.nameisled = nameisled;
             this.timeframe = timeFarme;
-            /////////////////////////////////////////////////// 
+            this.listPerson = new System.Collections.ArrayList();
+            this.listPaper = new System.Collections.ArrayList(); 
             
         }
         public ResearchTeam() : base()
         {
-            /////////////////////////////////
+            this.listPerson = new System.Collections.ArrayList();
+            this.listPaper = new System.Collections.ArrayList();
             this.nameisled = "default";
         }
         public string Name
@@ -170,35 +110,67 @@ namespace TeamProjectes
         }
         public void AddPapers(params Paper[] publicat)
         {
-            listPaper.Add(publicat);
+            foreach (Paper pub in publicat)
+            {
+                listPaper.Add(pub);
+            }
         }
         public void AddMembers(params Person[] persons)
         {
-            listPerson.Add(persons);
+            foreach (Person person in persons)
+            {
+                listPerson.Add(person);
+            }
         }
         public override string ToString()
         {
-            string rez = base.ToString() + $"Название темы иследования:{nameisled}\nНазвание организации:{nameOrganiz}\nРегстрационный номер:{registrId}\nПродолжительность иследований:{timeframe}\nСписок публикаций:\nСписок участников:\n" ;
-            foreach (Paper paper in listPaper)
-            {
-                rez += paper + "\n";
-            }
-            rez += "Список публикаций\n";
-            foreach (Paper paper in listPerson)
-            {
-                rez += paper + "\n";
-            }
-            return rez;
+            return base.ToString() + $"Название темы иследования:{nameisled}\nПродолжительность иследований:{timeframe}\nСписок публикаций:\n" + string.Join("\n", listPerson) + " \nСписок участников:\n" + string.Join("\n", listPerson);
+
+           
+            
         }
         public virtual string ToShotrString()
         {
-            return $"Название темы иследования:{nameisled}\nНазвание организации:{nameOrganiz}\nРегстрационный номер:{registrId}\nПродолжительность иследований:{timeframe}\n";
+            return base.ToString() + $"Название темы иследования:{nameisled}\nПродолжительность иследований:{timeframe}\n";
         }
         public override  object DeepCopy()
         {
-            return new ResearchTeam(nameisled, Name, RegistrId, timeframe);
+            return new ResearchTeam(nameisled, Name, RegistrId, timeframe)
+            {
+                ListPerson = (System.Collections.ArrayList)listPerson.Clone(),
+                ListPaper = (System.Collections.ArrayList)listPaper.Clone(),
+            };
         }
-
+        public IEnumerable PersonPerebor()
+        {
+            foreach (Person person in listPerson)
+            {
+                bool publicat = true;
+                foreach(Paper paper in listPaper)
+                {
+                    if(paper.Author.Equals(person))
+                    {
+                        publicat = false;
+                        break;
+                    }
+                }
+                if (!publicat)
+                {
+                    yield return person;
+                }
+            }
+        }
+        public IEnumerable Paperperebor(int n)
+        {
+            DateTime Date = DateTime.Now;
+            foreach(Paper paper in listPaper)
+            {
+                if((Date - paper.PublishDate).TotalDays <= n * 365)
+                {
+                    yield return paper;
+                }
+            }
+        }
 
     }
 }

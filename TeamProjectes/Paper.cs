@@ -28,7 +28,7 @@ class Paper
 
     public override string ToString() 
     { 
-        return $"Заголовок: {Title}, Автор: {Author.ToString()}, Дата публикации: {PublishDate.ToShortDateString()}"; 
+        return $"Заголовок: {Title}, Автор: {Author}, Дата публикации: {PublishDate.ToShortDateString()}"; 
     }
     public string Name 
     {

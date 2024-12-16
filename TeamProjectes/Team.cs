@@ -50,11 +50,7 @@ internal class Team : INameAndCopy
 	{
 		return new Team(Name,registrId);
 	}
-	public virtual object DeepCpoy()
-	{
-		return new Team (nameOrganiz,registrId);
-	}
-
+	
     public override bool Equals(object? obj)
     {
         if (obj == null || !(obj is Team))

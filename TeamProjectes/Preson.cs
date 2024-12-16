@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using Microsoft.Win32;
+using System.Xml.Linq;
 
 namespace TeamProjectes;
 
@@ -81,19 +82,24 @@ class Person
 
     public override bool Equals(object? obj)
     {
-        if (obj == null || GetType() != obj.GetType()) return false;
-        Person oth = (Person)obj;
-        return firstName == oth.firstName && lastName == oth.lastName && birthday == oth.birthday;
+        if (obj == null || !(obj is Team))
+        {
+            return false;
+        }
+        else
+        {
+            return firstName == (obj as Person).firstName && lastName == (obj as Person).lastName && birthday == (obj as Person).birthday;
+        }
     }
     public static bool operator ==(Person lhs, Person rhs) 
-    { 
-        if (ReferenceEquals(lhs, null) && ReferenceEquals(rhs, null)) return true;
-        if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null)) return false; 
-        return lhs.Equals(rhs); 
+    {
+        if ((object)lhs == null) return (object)rhs == null;
+        return lhs.Equals(rhs);
     }
     public static bool operator !=(Person lhs, Person rhs)
     {
-        return !(lhs == rhs); 
+        if ((object)lhs == null) return false;
+        return !lhs.Equals(rhs); ;
     }
     public override int GetHashCode() 
     {

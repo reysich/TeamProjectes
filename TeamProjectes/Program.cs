@@ -60,5 +60,10 @@ class Program
         {
             Console.WriteLine(paper);
         }
+        Console.WriteLine("Публикации за последний год:");
+        foreach (Paper paper in researchTeam.Paperperebor(1))
+        {
+            Console.WriteLine(paper);
+        }
     }
 }

@@ -40,6 +40,7 @@ class Program
         Console.WriteLine(researchTeam.BaseTeam);
 
         ResearchTeam researchTeamCopy = (ResearchTeam)researchTeam.DeepCopy();
+        
         researchTeam.Name = "SsS";
         researchTeam.RegistrId = 54321;
 
@@ -65,5 +66,6 @@ class Program
         {
             Console.WriteLine(paper);
         }
+
     }
 }

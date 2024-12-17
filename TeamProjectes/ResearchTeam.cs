@@ -70,7 +70,7 @@ namespace TeamProjectes
                 RegistrId = value.RegistrId;
             }
         }
-        public Paper lastPublicat
+        public Paper? lastPublicat
         {
             get
             {

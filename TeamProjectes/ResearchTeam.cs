@@ -124,8 +124,9 @@ namespace TeamProjectes
         }
         public override string ToString()
         {
-            return base.ToString() + $"Название темы иследования:{nameisled}\nПродолжительность иследований:{timeframe}\nСписок публикаций:\n" + string.Join("\n", listPerson) + " \nСписок участников:\n" + string.Join("\n", listPerson);
-
+            string persons = string.Join("\n", listPerson.Cast<Person>());
+            string papers = string.Join("\n", listPaper.Cast<Paper>());
+            return base.ToString() + $"Название темы исследования: {nameisled}\nПродолжительность исследований: {timeframe}\nСписок публикаций:\n" + papers + "\nСписок участников:\n" + persons;
 
 
         }
@@ -141,7 +142,7 @@ namespace TeamProjectes
                 ListPaper = (System.Collections.ArrayList)listPaper.Clone(),
             };
         }
-        public IEnumerable PersonPerebor()
+        public IEnumerable<Person> PersonPerebor()
         {
             foreach (Person person in listPerson)
             {
@@ -160,7 +161,7 @@ namespace TeamProjectes
                 }
             }
         }
-        public IEnumerable PersonOnepublic()
+        public IEnumerable<Person> PersonOnepublic()
         {
             foreach (Person person in listPerson)
             {
@@ -178,7 +179,7 @@ namespace TeamProjectes
                 }
             }
         }
-        public IEnumerable Paperperebor(int n)
+        public IEnumerable<Paper> Paperperebor(int n)
         {
             DateTime Date = DateTime.Now;
             foreach (Paper paper in listPaper)

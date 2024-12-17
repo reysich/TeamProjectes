@@ -160,6 +160,24 @@ namespace TeamProjectes
                 }
             }
         }
+        public IEnumerable PersonOnepublic()
+        {
+            foreach (Person person in listPerson)
+            {
+                int count = 0;
+                foreach (Paper paper in listPaper)
+                {
+                    if (paper.Author.Equals(person))
+                    {
+                        count++;
+                    }
+                }
+                if (count > 1)
+                {
+                    yield return person;
+                }
+            }
+        }
         public IEnumerable Paperperebor(int n)
         {
             DateTime Date = DateTime.Now;

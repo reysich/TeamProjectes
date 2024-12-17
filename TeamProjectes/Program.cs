@@ -57,7 +57,7 @@ class Program
             {
                 Console.WriteLine(person);
             }
-
+            
             Console.WriteLine("Публикации за последние два года:");
             foreach (Paper paper in researchTeam.Paperperebor(2))
             {
@@ -67,6 +67,11 @@ class Program
             foreach (Paper paper in researchTeam.Paperperebor(1))
             {
                 Console.WriteLine(paper);
+            }
+            Console.WriteLine("Участники проекта с более чем одной публикацией:"); 
+            foreach (Person person in researchTeam.PersonOnepublic()) 
+            { 
+                Console.WriteLine(person); 
             }
         }
         catch (Exception ex)
